@@ -63,5 +63,11 @@ public class UsuarioController {
 	public ResponseEntity<?> deleteUsuario(@PathVariable int id) {
 		return ResponseEntity.status(HttpStatus.OK).body(usuarioService.deleteUsuario(id));
 	}
+	@GetMapping("buscar/{id}")
+	public UsuarioResponseDTO buscarUsuario(@PathVariable int id) {
+    Usuario usuario = usuarioService.buscarPorId(id);
+    return new UsuarioResponseDTO(usuario);
+}
+
 
 }

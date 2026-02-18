@@ -1,10 +1,13 @@
 package com.List.ToDo.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,7 +17,10 @@ public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+	@OneToMany(mappedBy = "usuario")
+	private List<Tarefa> tarefas;
+
+
 	private String nome;
 	
 	
@@ -40,6 +46,14 @@ public class Usuario {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+		
+	public List<Tarefa> getTarefas() {
+		return tarefas;
+	}
+
+	public void setTarefas(List<Tarefa> tarefas) {
+		this.tarefas = tarefas;
 	}
 
 	public String getNome() {

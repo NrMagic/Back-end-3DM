@@ -17,7 +17,7 @@ public class Tarefa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private long idUsuario;
+	//private long idUsuario;
 	private String nome;
 	private String descricao;
 	private Status status;
@@ -32,15 +32,17 @@ public class Tarefa {
 
 	}
 
-	public Tarefa(long idUsuario, String nome, String descricao, Status status, LocalDate dtInicio, LocalDate dtFim) {
+	public Tarefa(Usuario usuario, String nome, String descricao, Status status, LocalDate dtInicio, LocalDate dtFim) {
 	
-		this.idUsuario = idUsuario;
+		//this.idUsuario = idUsuario;
+		this.usuario = usuario;
 		this.nome = nome;
 		this.descricao = descricao;
 		this.status = Status.A_FAZER;
 		this.dtInicio = LocalDate.now();
 		this.dtFim = dtFim;
 	}
+	/*
 	public long getIdUsuario() {
 		return idUsuario;
 	}
@@ -48,7 +50,7 @@ public class Tarefa {
 	public void setIdUsuario(long idUsuario) {
 		this.idUsuario = idUsuario;
 	}
-
+	*/
 
 	public long getId() {
 		return id;

@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 public class TarefaRequestDTO {
 
 	@NotNull
-	private long idUsuario;
+	private int idUsuario;
 
 	@NotBlank(message = "O nome não pode ser vazio e/ou nulo.")
 	private String nome;
@@ -27,7 +27,7 @@ public class TarefaRequestDTO {
 
 	}
 
-	public TarefaRequestDTO(long idUsuario , String nome, String descricao, Status status, LocalDate dtInicio, LocalDate dtFim) {
+	public TarefaRequestDTO(int idUsuario , String nome, String descricao, Status status, LocalDate dtInicio, LocalDate dtFim) {
 		this.idUsuario = idUsuario;
 		this.nome = nome;
 		this.descricao = descricao;
@@ -36,11 +36,11 @@ public class TarefaRequestDTO {
 		this.dtFim = dtFim;
 	}
 	
-		public long getIdUsuario() {
+		public int getIdUsuario() {
 		return idUsuario;
 	}
 
-	public void setIdUsuario(long idUsuario) {
+	public void setIdUsuario(int idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 	

@@ -3,7 +3,6 @@ package com.List.ToDo.service;
 
 import java.util.List;
 import java.util.Optional;
-//import com.List.ToDo.repository.UsuarioRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,13 +11,15 @@ import com.List.ToDo.entity.Status;
 import com.List.ToDo.dto.TarefaRequestDTO;
 import com.List.ToDo.dto.TarefaResponseDTO;
 import com.List.ToDo.entity.Tarefa;
+import com.List.ToDo.entity.Usuario;
 import com.List.ToDo.repository.TarefaRepository;
+import com.List.ToDo.repository.UsuarioRepository;
 
 @Service
 public class TarefaService {
 
-	//@Autowired
-    //private UsuarioRepository usuarioRepository;
+	@Autowired
+    private UsuarioRepository usuarioRepository;
 	
 	@Autowired
 	private TarefaRepository tarefaRepository;
@@ -27,9 +28,13 @@ public class TarefaService {
 	// criar tarefa
 	public TarefaResponseDTO saveTask(TarefaRequestDTO tarefaRequestDTO) {
 
+		Usuario usuario = usuarioRepository.findById(tarefaRequestDTO.getIdUsuario())
+        .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
 		
-		Tarefa tarefa = new Tarefa( tarefaRequestDTO.getIdUsuario(),
-		tarefaRequestDTO.getNome(),
+		Tarefa tarefa = new Tarefa(
+		 usuario,
+		 tarefaRequestDTO.getNome(),
 		 tarefaRequestDTO.getDescricao(),
 		 Status.A_FAZER, 
 		 tarefaRequestDTO.getDtInicio(), 
