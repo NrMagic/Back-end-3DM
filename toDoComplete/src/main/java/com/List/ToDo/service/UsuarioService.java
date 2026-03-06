@@ -93,7 +93,7 @@ public class UsuarioService {
 		}
 	}
 
-//      Buscar tarefa do usuario pelo id terefa
+//      Buscar tarefa do usuario pelo id e trazer as terefas relacionadas
 		public Usuario buscarPorId(int id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
