@@ -33,11 +33,4 @@ public class UserEntity {
     //  Criando uma lista pra mostrar todos os pedidos dos Usuários
     private List<OrderEntity> orders = new ArrayList<>();
 
-    public UserEntity(String name, String email, String phone, String password, RoleEnum roles) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.password = password;
-        this.roles = roles;
-    }
 }

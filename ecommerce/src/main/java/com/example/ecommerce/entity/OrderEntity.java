@@ -1,26 +1,25 @@
 package com.example.ecommerce.entity;
 
-import com.example.ecommerce.enums.StatusDoPedido;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Getter
+@Setter
 @Entity
 public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @SuppressWarnings("unused")
     private LocalDate moment;
-    @SuppressWarnings("unused")
-    private StatusDoPedido status;
+    private String status;
 //  Anotation pra falar que é uma relação de muitos pra 1
     @ManyToOne
 //  define qual coluna será usada como chave estrangeira na tabela
     @JoinColumn(name  = "cliente_id")
     private UserEntity client;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private PaymentEntity payment;
 }

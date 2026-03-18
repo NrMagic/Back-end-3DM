@@ -1,32 +1,36 @@
 package com.example.ecommerce.dto;
 
 import com.example.ecommerce.enums.RoleEnum;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class UserRequestDTO {
 
-    public String getEmail() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEmail'");
-    }
+    @NotBlank(message = "Nome é obrigatório")
+    private String name;
 
-    public String getPhone() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPhone'");
-    }
+    @Email(message = "Email inválido")
+    @NotBlank(message = "Email é obrigatório")
+    private String email;
 
-    public String getPassword() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPassword'");
-    }
+    private String phone;
 
-    public RoleEnum getRoles() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRoles'");
-    }
+    @NotBlank(message = "Senha é obrigatória")
+    private String password;
 
-    public String getName() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getName'");
-    }
+    private RoleEnum roles;
 
+    public UserRequestDTO(@NotBlank(message = "Nome é obrigatório") String name,
+            @Email(message = "Email inválido") @NotBlank(message = "Email é obrigatório") String email, String phone,
+            @NotBlank(message = "Senha é obrigatória") String password, RoleEnum roles) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.roles = roles;
+    }
 }

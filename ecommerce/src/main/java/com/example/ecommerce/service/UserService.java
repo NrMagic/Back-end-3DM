@@ -24,16 +24,13 @@ public class UserService {
         if (userRepository.findByEmail(userReq.getEmail()).isPresent()) {
             throw new DuplicateKeyException("já existe um usuário com esse email cadastrado");
         }
-        UserEntity newUser = new UserEntity(userReq.getName(), userReq.getEmail(), userReq.getPhone(), userReq.getPassword(), userReq.getRoles());
-        userRepository.save(newUser);
-        return new UserResponseDTO(newUser.getName(), newUser.getEmail(), newUser.getPhone());
     }
 
     public UserResponseDTO getUserById(Long id) {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com id: " + id));
 
-        return new UserResponseDTO(user.getName(), user.getEmail(), user.getPhone());
+        return new UserResponseDTO(user.getName(), user.getEmail(), user.getPhone(), user.getRoles());
     }
 
     public UserResponseDTO updateUserById(Long id, UserRequestDTO userReq) {
@@ -48,7 +45,7 @@ public class UserService {
 //      salva como novo usuario
         UserEntity updatedUser = userRepository.save(userEntity);
 //      retorna o response
-        return new UserResponseDTO(updatedUser.getName(), updatedUser.getEmail(), updatedUser.getPhone());
+        return new UserResponseDTO(updatedUser.getName(), updatedUser.getEmail(), updatedUser.getPhone(), updatedUser.getRoles());
     }
     public void deleteUserById(Long id){
         userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("não existe um usuário com esse id"));
