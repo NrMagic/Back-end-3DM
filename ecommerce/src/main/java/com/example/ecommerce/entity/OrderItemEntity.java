@@ -1,5 +1,8 @@
 package com.example.ecommerce.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +24,7 @@ public class OrderItemEntity {
     // 🔗 Pedido
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonBackReference
     private OrderEntity order;
 
     // 🔗 Produto
@@ -30,4 +34,6 @@ public class OrderItemEntity {
 
     // 📊 Quantidade
     private Integer quantity;
+
+
 }

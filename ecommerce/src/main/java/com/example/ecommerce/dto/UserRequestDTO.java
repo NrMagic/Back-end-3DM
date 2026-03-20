@@ -33,4 +33,7 @@ public class UserRequestDTO {
         this.password = password;
         this.roles = roles;
     }
+    public UserRequestDTO() {   
+
+}
 }

@@ -8,8 +8,10 @@ import com.example.ecommerce.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -23,19 +25,26 @@ public class OrderService {
 
     // Criar um novo pedido
     public OrderEntity createOrder(OrderRequestDTO orderRequestDTO) {
-        OrderEntity order = new OrderEntity();
-        order.setMoment(orderRequestDTO.getMoment());
-        order.setStatus(orderRequestDTO.getStatus());
-        order.setClient(orderRequestDTO.getClient());
+    OrderEntity order = new OrderEntity();
+    order.setMoment(orderRequestDTO.getMoment());
+    order.setStatus(orderRequestDTO.getStatus());
+    order.setClient(orderRequestDTO.getClient());
 
-        // Configurar itens do pedido
-        if (orderRequestDTO.getItems() != null) {
-            orderRequestDTO.getItems().forEach(item -> item.setOrder(order));
-            order.setItems(orderRequestDTO.getItems());
+    if (orderRequestDTO.getItems() != null) {
+        List<OrderItemEntity> orderItems = new ArrayList<>();
+        for (OrderItemEntity dtoItem : orderRequestDTO.getItems()) {
+            OrderItemEntity item = new OrderItemEntity();
+            item.setProduct(dtoItem.getProduct());
+            item.setQuantity(dtoItem.getQuantity());
+            item.setOrder(order);
+            orderItems.add(item);
         }
-
-        return orderRepository.save(order);
+        order.setItems(orderItems);
     }
+
+    return orderRepository.save(order);
+}
+
 
     // Buscar todos os pedidos
     public List<OrderEntity> getAllOrders() {
@@ -43,12 +52,12 @@ public class OrderService {
     }
 
     // Buscar pedido por ID
-    public Optional<OrderEntity> getOrderById(Long id) {
+    public Optional<OrderEntity> getOrderById(UUID id) {
         return orderRepository.findById(id);
     }
 
     // Atualizar um pedido existente
-    public OrderEntity updateOrder(Long id, OrderRequestDTO orderRequestDTO) {
+    public OrderEntity updateOrder(UUID id, OrderRequestDTO orderRequestDTO) {
         OrderEntity order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pedido não encontrado com ID: " + id));
 
@@ -67,7 +76,7 @@ public class OrderService {
     }
 
     // Deletar pedido
-    public void deleteOrder(Long id) {
+    public void deleteOrder(UUID id) {
         if (!orderRepository.existsById(id)) {
             throw new RuntimeException("Pedido não encontrado com ID: " + id);
         }

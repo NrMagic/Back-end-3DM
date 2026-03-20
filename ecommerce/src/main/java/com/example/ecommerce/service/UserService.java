@@ -1,54 +1,83 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.entity.UserEntity;
-import com.example.ecommerce.repository.UserRepository;
-import com.example.ecommerce.dto.UserRequestDTO;
-import com.example.ecommerce.dto.UserResponseDTO;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.ecommerce.dto.UserRequestDTO;
+import com.example.ecommerce.dto.UserResponseDTO;
+import com.example.ecommerce.entity.UserEntity;
+import com.example.ecommerce.repository.UserRepository;
+
+
+import java.util.UUID;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    // Criar novo usuário
+    public UserResponseDTO createUser(UserRequestDTO dto) {
+        UserEntity entity = new UserEntity();
+        entity.setName(dto.getName());
+        entity.setEmail(dto.getEmail());
+        entity.setPhone(dto.getPhone());
+        entity.setPassword(dto.getPassword());
+        entity.setRoles(dto.getRoles());
+
+        UserEntity saved = userRepository.save(entity);
+
+        UserResponseDTO response = new UserResponseDTO();
+        response.setId(saved.getId());
+        response.setName(saved.getName());
+        response.setEmail(saved.getEmail());
+        response.setPhone(saved.getPhone());
+        response.setRoles(saved.getRoles());
+
+        return response;
     }
 
-    public UserResponseDTO createUser(UserRequestDTO userReq) {
-        if (userReq == null) {
-            throw new IllegalArgumentException("os dados inseridos são inválidos");
-        }
-        if (userRepository.findByEmail(userReq.getEmail()).isPresent()) {
-            throw new DuplicateKeyException("já existe um usuário com esse email cadastrado");
-        }
-    }
-
-    public UserResponseDTO getUserById(Long id) {
+    // Buscar usuário por ID
+    public UserResponseDTO getUserById(UUID id) {
         UserEntity user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com id: " + id));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        return new UserResponseDTO(user.getName(), user.getEmail(), user.getPhone(), user.getRoles());
+        UserResponseDTO response = new UserResponseDTO();
+        response.setId(user.getId());
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
+        response.setPhone(user.getPhone());
+        response.setRoles(user.getRoles());
+
+        return response;
     }
 
-    public UserResponseDTO updateUserById(Long id, UserRequestDTO userReq) {
-//      metodo do Jpa repository que retorna um optional(podendo estar vazio ou com objeto)
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("não existe um usuário com esse id"));
-//      atualiza o usuario com id passado
-        userEntity.setName(userReq.getName());
-        userEntity.setEmail(userReq.getEmail());
-        userEntity.setPhone(userReq.getPhone());
-        userEntity.setPassword(userReq.getPassword());
-        userEntity.setRoles(userReq.getRoles());
-//      salva como novo usuario
-        UserEntity updatedUser = userRepository.save(userEntity);
-//      retorna o response
-        return new UserResponseDTO(updatedUser.getName(), updatedUser.getEmail(), updatedUser.getPhone(), updatedUser.getRoles());
+    // Atualizar usuário
+    public UserResponseDTO updateUserById(UUID id, UserRequestDTO dto) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPhone(dto.getPhone());
+        user.setPassword(dto.getPassword());
+        user.setRoles(dto.getRoles());
+
+        UserEntity updated = userRepository.save(user);
+
+        UserResponseDTO response = new UserResponseDTO();
+        response.setId(updated.getId());
+        response.setName(updated.getName());
+        response.setEmail(updated.getEmail());
+        response.setPhone(updated.getPhone());
+        response.setRoles(updated.getRoles());
+
+        return response;
     }
-    public void deleteUserById(Long id){
-        userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("não existe um usuário com esse id"));
+
+    // Deletar usuário
+    public void deleteUserById(UUID id) {
         userRepository.deleteById(id);
     }
 }

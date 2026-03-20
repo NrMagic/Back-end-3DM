@@ -1,57 +1,75 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.entity.ProductEntity;
-import com.example.ecommerce.repository.ProductRepository;
-import com.example.ecommerce.dto.ProductRequestDTO;
-import com.example.ecommerce.dto.ProductResponseDTO;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import com.example.ecommerce.dto.ProductRequestDTO;
+import com.example.ecommerce.dto.ProductResponseDTO;
+import com.example.ecommerce.entity.ProductEntity;
+import com.example.ecommerce.repository.ProductRepository;
 
-@SuppressWarnings("unused")
+
 @Service
 public class ProductService {
-    private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository){
-        this.productRepository = productRepository;
+    @Autowired
+    private ProductRepository productRepository;
+
+    public ProductResponseDTO createProduct(ProductRequestDTO dto) {
+        ProductEntity entity = new ProductEntity();
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setPrice(dto.getPrice());
+        entity.setImgURL(dto.getImgURL());
+
+        ProductEntity saved = productRepository.save(entity);
+
+        ProductResponseDTO response = new ProductResponseDTO();
+        response.setId(saved.getId());
+        response.setName(saved.getName());
+        response.setDescription(saved.getDescription());
+        response.setPrice(saved.getPrice());
+        response.setImgURL(saved.getImgURL());
+
+        return response;
     }
 
-    public ProductResponseDTO createProduct(ProductRequestDTO productReq){
-        if(productReq == null){
-            throw new IllegalArgumentException("os dados inseridos são inválidos");
-        }
-        if(productRepository.findByName(productReq.getName()).isPresent()){
-            throw new DuplicateKeyException("Já existe um produto com esse nome");
-        }
+    public ProductResponseDTO showProductById(Long id) {
+        ProductEntity product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
-        ProductEntity newProd = new ProductEntity(productReq.getName(), productReq.getDescription(),productReq.getPrice(),productReq.getImgURL());
-        productRepository.save(newProd);
-        return new ProductResponseDTO(newProd.getName(), newProd.getDescription(), newProd.getPrice(), newProd.getImgURL(), newProd.getId(), newProd.getCreatedAt(), newProd.getUpdatedAt());
+        ProductResponseDTO response = new ProductResponseDTO();
+        response.setId(product.getId());
+        response.setName(product.getName());
+        response.setDescription(product.getDescription());
+        response.setPrice(product.getPrice());
+        response.setImgURL(product.getImgURL());
+
+        return response;
     }
 
-    public ProductResponseDTO showProductById(Long id){
-        ProductEntity prod = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("não existe um produto com esse id: " + id));
-        return new ProductResponseDTO(prod.getName(), prod.getDescription(), prod.getPrice(), prod.getImgURL(), prod.getId(), prod.getCreatedAt(), prod.getUpdatedAt());
+    public ProductResponseDTO updateProduct(Long id, ProductRequestDTO dto) {
+        ProductEntity product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setImgURL(dto.getImgURL());
+
+        ProductEntity updated = productRepository.save(product);
+
+        ProductResponseDTO response = new ProductResponseDTO();
+        response.setId(updated.getId());
+        response.setName(updated.getName());
+        response.setDescription(updated.getDescription());
+        response.setPrice(updated.getPrice());
+        response.setImgURL(updated.getImgURL());
+
+        return response;
     }
 
-    public ProductResponseDTO updateProduct(Long id, ProductRequestDTO proReq){
-        ProductEntity productEntity = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("não existe um usuário com esse id"));
-
-        productEntity.setName(proReq.getName());
-        productEntity.setDescription(proReq.getDescription());
-        productEntity.setPrice(proReq.getPrice());
-        productEntity.setImgURL(proReq.getImgURL());
-
-        ProductEntity updatedProduct = productRepository.save(productEntity);
-
-        return new ProductResponseDTO(updatedProduct.getName(), updatedProduct.getDescription(), updatedProduct.getPrice(),);
-    }
-
-    public void deleteProduct(Long id){
-        productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("não existe um produto com esse id"));
+    public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 }

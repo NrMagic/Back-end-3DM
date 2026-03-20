@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Getter
 @Setter
@@ -21,5 +24,10 @@ public class OrderEntity {
 //  define qual coluna será usada como chave estrangeira na tabela
     @JoinColumn(name  = "cliente_id")
     private UserEntity client;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<OrderItemEntity> items;
+
 
 }
