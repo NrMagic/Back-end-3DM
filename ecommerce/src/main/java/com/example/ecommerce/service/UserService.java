@@ -8,7 +8,8 @@ import com.example.ecommerce.dto.UserResponseDTO;
 import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.repository.UserRepository;
 
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -37,6 +38,21 @@ public class UserService {
 
         return response;
     }
+
+    // Buscar todos os usuários
+    public List<UserResponseDTO> getAllUsers() {
+        List<UserEntity> users = userRepository.findAll();
+        List<UserResponseDTO> response = new ArrayList<>();  
+        for (UserEntity user : users) {
+            UserResponseDTO dto = new UserResponseDTO();
+            dto.setId(user.getId());
+            dto.setName(user.getName());
+            dto.setEmail(user.getEmail());
+            dto.setPhone(user.getPhone());
+            dto.setRoles(user.getRoles());
+        }
+        return response;
+    }   
 
     // Buscar usuário por ID
     public UserResponseDTO getUserById(UUID id) {

@@ -5,6 +5,7 @@ import com.example.ecommerce.dto.UserResponseDTO;
 import com.example.ecommerce.service.UserService;
 import jakarta.validation.Valid;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("create")
+    @PostMapping("/create")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userReq){
         UserResponseDTO userRes = userService.createUser(userReq);
         return ResponseEntity.ok(userRes);
+    }
+    @GetMapping("/show")
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<UserResponseDTO> response = userService.getAllUsers();
+        return ResponseEntity.ok(response);
     }
     @GetMapping("/show/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable UUID id) {

@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -17,13 +18,15 @@ public class EcommerceConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/users/create","/api/users/update").authenticated()
-                .requestMatchers("/products/**").hasRole("ADMIN")
+                .requestMatchers("/user/create","/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/user/update").hasRole("USER")
+                .requestMatchers("/products/**","/user/**","/orders/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 )
         .httpBasic(withDefaults());
-        return http.build();
+      return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
