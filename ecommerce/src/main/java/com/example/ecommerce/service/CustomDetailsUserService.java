@@ -11,7 +11,7 @@ import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.repository.UserRepository;
 
 @Service
-public class CustomDetailsUserService {
+public class CustomDetailsUserService implements UserDetailsService {
     
     private final UserRepository userRepository;
 
@@ -19,12 +19,11 @@ public class CustomDetailsUserService {
         this.userRepository = userRepository;
     }
     
-    @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        UserEntity usuario = userRepository.findByEmail(name);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity usuario = userRepository.findByEmail(email);
 
         return User.builder()
-                .username(usuario.getName())
+                .username(usuario.getEmail())
                 .password(usuario.getPassword())
                 .roles(usuario.getRoles().name().replace("ROLE_", ""))
                 .build();

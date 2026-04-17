@@ -2,6 +2,8 @@ package com.example.ecommerce.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import com.example.ecommerce.dto.UserRequestDTO;
 import com.example.ecommerce.dto.UserResponseDTO;
@@ -17,6 +19,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Criar novo usuário
     public UserResponseDTO createUser(UserRequestDTO dto) {
@@ -24,7 +28,7 @@ public class UserService {
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
         entity.setPhone(dto.getPhone());
-        entity.setPassword(dto.getPassword());
+        entity.setPassword(passwordEncoder.encode(dto.getPassword()));
         entity.setRoles(dto.getRoles());
 
         UserEntity saved = userRepository.save(entity);
