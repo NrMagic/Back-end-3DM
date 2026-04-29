@@ -1,5 +1,8 @@
 package com.example.ecommerce.dto;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class OrderItemRequestDTO {
 
     private Long productId;

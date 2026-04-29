@@ -3,7 +3,6 @@ package com.example.ecommerce.service;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +10,7 @@ import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.repository.UserRepository;
 
 @Service
-public class CustomDetailsUserService implements UserDetailsService {
+public class CustomDetailsUserService {
     
     private final UserRepository userRepository;
 
@@ -19,11 +18,11 @@ public class CustomDetailsUserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
     
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity usuario = userRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+        UserEntity usuario = userRepository.findByEmail(name);
 
         return User.builder()
-                .username(usuario.getEmail())
+                .username(usuario.getName())
                 .password(usuario.getPassword())
                 .roles(usuario.getRoles().name().replace("ROLE_", ""))
                 .build();
